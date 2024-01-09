@@ -7,23 +7,18 @@ import os
 from tqdm import tqdm
 import deepchem as dc
 from rdkit import Chem
+from torch_geometric.data import Data
 
 
 class MoleculeDataset(Dataset):
     def __init__(self, root, filename, test=False, transform=None, pre_transform=None):
-        """
-        root = Where the dataset should be stored. This folder is split
-        into raw_dir (downloaded dataset) and processed_dir (processed data).
-        """
-        self.test = test
         self.filename = filename
+        self.test = test
+
         super(MoleculeDataset, self).__init__(root, transform, pre_transform)
 
     @property
     def raw_file_names(self):
-        """ If this file exists in raw_dir, the download is not triggered.
-            (The download func. is not implemented here)
-        """
         return self.filename
 
     @property
@@ -44,11 +39,12 @@ class MoleculeDataset(Dataset):
         featurizer = dc.feat.MolGraphConvFeaturizer(use_edges=True)
         for index, row in tqdm(self.data.iterrows(), total=self.data.shape[0]):
             # Featurize molecule
-            mol = Chem.MolFromSmiles(row["smiles"])
+            mol = Chem.MolFromSmiles(row['mol'])
             f = featurizer._featurize(mol)
-            data = f.to_pyg_graph()
-            data.y = self._get_label(row["HIV_active"])
-            data.smiles = row["smiles"]
+            data = Data(x=torch.from_numpy(f.node_features).float())
+            # data = f.to_pyg_graph()
+            data.y = self._get_label(row["Class"])
+            data.smiles = row["mol"]
             if self.test:
                 torch.save(data,
                            os.path.join(self.processed_dir,
@@ -76,3 +72,8 @@ class MoleculeDataset(Dataset):
             data = torch.load(os.path.join(self.processed_dir,
                                            f'data_{idx}.pt'))
         return data
+
+
+if __name__ == '__main__':
+    train_dataset = MoleculeDataset(root="data/", filename="train_bace.csv", test=False)
+    test_dataset = MoleculeDataset(root="data/", filename="test_bace.csv", test=True)
