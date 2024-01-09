@@ -43,8 +43,9 @@ class MoleculeDataset(Dataset):
             f = featurizer._featurize(mol)
             data = Data(x=torch.from_numpy(f.node_features).float())
             # data = f.to_pyg_graph()
-            data.y = self._get_label(row["Class"])
+            data.y = row["Class"]
             data.smiles = row["mol"]
+            data.molfeature = row.iloc[6:20]
             if self.test:
                 torch.save(data,
                            os.path.join(self.processed_dir,
@@ -53,10 +54,10 @@ class MoleculeDataset(Dataset):
                 torch.save(data,
                            os.path.join(self.processed_dir,
                                         f'data_{index}.pt'))
-
-    def _get_label(self, label):
-        label = np.asarray([label])
-        return torch.tensor(label, dtype=torch.int64)
+    #
+    # def _get_label(self, label):
+    #     label = np.asarray([label])
+    #     return torch.tensor(label, dtype=torch.int64)
 
     def len(self):
         return self.data.shape[0]
