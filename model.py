@@ -32,8 +32,8 @@ class myGNN(nn.Module):
         x = self.relu(self.conv1(x, edge_index))
         x, edge_index1, _, batch, perm1, score1 = self.pool1(x, edge_index, None, batch)
 
-        x = self.relu(self.conv2(x, edge_index))
-        x, edge_index2, _, batch, perm2, score2 = self.pool2(x, edge_index, None, batch)
+        x = self.relu(self.conv2(x, edge_index1))
+        x, edge_index2, _, batch, perm2, score2 = self.pool2(x, edge_index1, None, batch)
 
         # mol_emb = self.fc_molfeature(mol_feat)
         x = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
