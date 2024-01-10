@@ -41,7 +41,7 @@ def calculate_metrics(y_pred, y_true, epoch, type):
 
 ## PARAMS
 num_batch = 32
-num_epoch = 100
+num_epoch = 200
 lr = 0.001
 log_interval = 5
 

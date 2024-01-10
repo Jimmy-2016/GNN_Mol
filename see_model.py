@@ -151,8 +151,23 @@ pos = nx.spring_layout(G, seed=42)
 nx.draw(G, pos, with_labels=True, font_weight='bold')
 plt.title("TopK 2")
 
+print(nodes)
+print(perm1)
+print(perm1[perm2])
+
+print(nodes.shape)
+print(perm1.shape)
+print(perm1[perm2].shape)
+
+##
+plt.figure()
+plt.plot(perm1.detach().numpy(), score1.detach().numpy(), '.', ms=20, c='b')
+plt.plot(perm1[perm2].detach().numpy() , score2.detach().numpy(), '.', ms=20, c='r')
 
 
 
 plt.show()
+
+
+
 

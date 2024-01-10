@@ -6,7 +6,7 @@ from torch_geometric.nn import global_mean_pool as gap, global_max_pool as gmp
 
 
 class myGNN(nn.Module):
-    def __init__(self, hidden_dim1=50, hidden_dim2=100, fc_hiddim=100, molfeature_dim=20, training=True):
+    def __init__(self, hidden_dim1=30, hidden_dim2=50, fc_hiddim=100, molfeature_dim=20, training=True):
         super(myGNN, self).__init__()
 
         self.conv1 = GCNConv(in_channels=30, out_channels=hidden_dim1)

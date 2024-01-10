@@ -33,8 +33,8 @@ explainer = Explainer(
     model=model,
     algorithm=GNNExplainer(epochs=200),
     explanation_type='model',
-    node_mask_type=None,
-    edge_mask_type='object',
+    node_mask_type='object',
+    edge_mask_type=None,
     model_config=dict(
         mode='binary_classification',
         task_level='graph',
@@ -47,9 +47,9 @@ model.eval()
 tmpdata = Data(x=test_data.x.squeeze(), edge_index=test_data.edge_index, batch=test_data.batch)
 
 explanation = explainer(x=tmpdata.x, edge_index=tmpdata.edge_index, batch=tmpdata.batch)
-# print(explanation.edge_mask)
-# print(explanation.node_mask)
 
-explanation.visualize_feature_importance(top_k=10)
+plt.figure()
+plt.plot(explanation.node_mask)
 
-explanation.visualize_graph()
+
+plt.show()
