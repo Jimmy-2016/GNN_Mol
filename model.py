@@ -30,10 +30,10 @@ class myGNN(nn.Module):
 
         mol_feat = mol_feat.view(batch.unique().shape[0], 14)
         x = self.relu(self.conv1(x, edge_index))
-        x, edge_index, _, batch, perm1, score1 = self.pool1(x, edge_index, None, batch)
+        x, edge_index1, _, batch, perm1, score1 = self.pool1(x, edge_index, None, batch)
 
         x = self.relu(self.conv2(x, edge_index))
-        x, edge_index, _, batch, perm2, score2 = self.pool2(x, edge_index, None, batch)
+        x, edge_index2, _, batch, perm2, score2 = self.pool2(x, edge_index, None, batch)
 
         # mol_emb = self.fc_molfeature(mol_feat)
         x = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
@@ -41,5 +41,5 @@ class myGNN(nn.Module):
         x = self.dropout(x)
         x = self.fc2(x)
 
-        return F.sigmoid(x), perm1, score1, perm2, score2
+        return F.sigmoid(x), edge_index1, perm1, score1, edge_index2, perm2, score2
 
