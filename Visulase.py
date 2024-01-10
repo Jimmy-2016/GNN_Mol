@@ -30,7 +30,8 @@ Draw.MolToFile(mol, 'mol_num.png')
 
 
 ##
-
+alldata = next(enumerate(train_loader))[1]
+plt.hist(alldata.y)
 for _, batch in enumerate(tqdm(train_loader)):
     a = 1
     plt.hist(batch.y)
