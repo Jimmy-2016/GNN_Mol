@@ -25,10 +25,10 @@ class myGNN(nn.Module):
         self.dropout = nn.Dropout(p=0.4)
         self.training = training
 
-    def forward(self, data):
-        x, edge_index, batch, edge_attr, mol_feat = data.x, data.edge_index, data.batch, data.edge_attr, data.molfeature
+    def forward(self, x, edge_index, batch):
+        # x, edge_index, batch, edge_attr, mol_feat = data.x, data.edge_index, data.batch, data.edge_attr, data.molfeature
 
-        mol_feat = mol_feat.view(batch.unique().shape[0], 14)
+        # mol_feat = mol_feat.view(batch.unique().shape[0], 14)
         x = self.relu(self.conv1(x, edge_index))
         out_pool1, edge_index1, _, batch, perm1, score1 = self.pool1(x, edge_index, None, batch)
 
@@ -41,5 +41,5 @@ class myGNN(nn.Module):
         x = self.dropout(x)
         x = self.fc2(x)
 
-        return F.sigmoid(x), out_pool1, edge_index1, perm1, score1, out_pool2, edge_index2, perm2, score2
+        return F.sigmoid(x)
 

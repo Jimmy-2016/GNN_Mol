@@ -40,6 +40,10 @@ class MoleculeDataset(Dataset):
         for index, row in tqdm(self.data.iterrows(), total=self.data.shape[0]):
             mol = Chem.MolFromSmiles(row['mol'])
 
+            # featurizer = dc.feat.MolGraphConvFeaturizer(use_edges=True)
+            # f = featurizer.featurize(Chem.MolToSmiles(mol))
+            # data = f[0].to_pyg_graph()
+
             # Get node features
             # torch.from_numpy(f.node_features).float()
             node_feats = torch.from_numpy(featurizer._featurize(mol).node_features).float()

@@ -73,7 +73,20 @@ model.eval()
 test_data = next(enumerate(test_loader))[1]
 test_data.x = test_data.x.float()
 test_data.molfeature = test_data.molfeature.float()
-pred, out_pool1, edge_index1, perm1, score1, out_pool2, edge_index2, perm2, score2 = model(test_data)
+
+
+x = model.relu(model.conv1(test_data.x, test_data.edge_index))
+out_pool1, edge_index1, _, batch, perm1, score1 = model.pool1(x, test_data.edge_index, None, test_data.batch)
+
+x = model.relu(model.conv2(out_pool1, edge_index1))
+out_pool2, edge_index2, _, batch, perm2, score2 = model.pool2(x, edge_index1, None, batch)
+
+# mol_emb = self.fc_molfeature(mol_feat)
+x = torch.cat([gmp(out_pool2, batch), gap(out_pool2, batch)], dim=1)
+x = model.relu(model.fc1(x))
+# x = model.dropout(x)
+pred = torch.nn.functional.sigmoid(model.fc2(x))
+
 
 print(pred)
 

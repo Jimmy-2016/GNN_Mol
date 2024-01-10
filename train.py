@@ -86,7 +86,7 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
         optimizer.zero_grad()
         data.x = data.x.float()
         data.molfeature = data.molfeature.float()
-        pred = model(data)[0]
+        pred = model(data.x, data.edge_index, data.batch)
         loss = loss_fn(torch.squeeze(pred), data.y.float())
         acc += torch.where((torch.where(pred >= 0.5, 1, 0).T - data.y.float()) == 0)[0].shape[0]/data.y.shape[0]
         loss.backward()
@@ -103,7 +103,7 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
         test_data = next(enumerate(test_loader))[1]
         test_data.x = test_data.x.float()
         test_data.molfeature = test_data.molfeature.float()
-        pred = model(test_data)[0]
+        pred = model(test_data.x, test_data.edge_index, test_data.batch)
         test_loss = loss_fn(torch.squeeze(pred), test_data.y.float())
         mlflow.log_metric("test_loss", test_loss, step=iter)
         calculate_metrics(torch.squeeze(torch.where(pred >= 0.5, 1, 0)), test_data.y.float(), iter, "test")
