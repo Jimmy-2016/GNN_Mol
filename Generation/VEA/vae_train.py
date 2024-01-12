@@ -19,21 +19,6 @@ from vae_model import *
 ##
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-def count_parameters(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
-
-def kl_loss(mu=None, logstd=None):
-    logstd = logstd.clamp(max=10)
-    var = logstd.exp()**2
-    # kl_div = -0.5 * torch.mean(torch.sum(1 + torch.log(var) - mu**2 - var, dim=1))
-    kl_div = torch.mean(torch.sum(var + mu**2 - torch.log(logstd.exp()) - 1, dim=1))
-
-    kl_div = kl_div.clamp(max=1000)
-    return kl_div
-
-
-
-
 ## PARAMS
 num_batch = 64
 num_epoch = 50
