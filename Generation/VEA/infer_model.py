@@ -63,7 +63,7 @@ plt.imshow(bin_mat)
 
 pred_smile = smiles_decoder(bin_mat.astype(int), mode='B')
 
-pred_smile = test_data.smiles
+# pred_smile = test_data.smiles
 print(pred_smile[:mol_len])
 
 

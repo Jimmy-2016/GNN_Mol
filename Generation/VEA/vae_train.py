@@ -32,8 +32,8 @@ def kl_loss(mu=None, logstd=None):
 
 
 ## PARAMS
-num_batch = 32
-num_epoch = 50
+num_batch = 64
+num_epoch = 500
 lr = 0.001
 log_interval = 5
 
@@ -53,7 +53,7 @@ print('NumParams = :{}'.format(count_parameters(model)))
 
 # < 1 increases precision, > 1 recall
 loss_fn = torch.nn.BCELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-3)
+optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
 # scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.01)
 
 # Start training
