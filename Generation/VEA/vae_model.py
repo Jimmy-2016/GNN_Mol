@@ -30,7 +30,7 @@ class mymolGen(nn.Module):
         # self.fc_molfeature = nn.Linear(14, molfeature_dim)
         # self.fc1 = nn.Linear(2 * hidden_dim2 + molfeature_dim, fc_hiddim)
         self.fc_mean = nn.Linear(2 * en_hidden_dim2, latent_dim)
-        self.fc_logvar = nn.Linear(2 * en_hidden_dim2, latent_dim)
+        self.fc_logstd = nn.Linear(2 * en_hidden_dim2, latent_dim)
 
         ## embed lenght
         self.fc_emd_len = nn.Embedding(200, 200)
@@ -42,9 +42,9 @@ class mymolGen(nn.Module):
         self.fc_out = nn.Linear(decoder_hid2, self.max_smile)
 
 
-    def reparameterize(self, mu, logvar):
+    def reparameterize(self, mu, logstd):
         if self.training:
-            std = torch.exp(logvar)
+            std = torch.exp(logstd)
             eps = torch.randn_like(std)
             return eps.mul(std).add_(mu)
         else:
@@ -62,10 +62,10 @@ class mymolGen(nn.Module):
         # mol_emb = self.fc_molfeature(mol_feat)
         x = torch.cat([gmp(out_pool2, batch), gap(out_pool2, batch)], dim=1)
         mu = self.relu(self.fc_mean(x))
-        logvar = self.relu(self.fc_logvar(x))
+        logstd = self.relu(self.fc_logstd(x))
 
         # reparm
-        z = self.reparameterize(mu, logvar)
+        z = self.reparameterize(mu, logstd)
         len_emb = self.relu(self.fc_emd_len(len))
         z = torch.cat([z, len_emb], dim=1)
         # decoder
@@ -73,7 +73,7 @@ class mymolGen(nn.Module):
         x = self.relu(self.fc_decoder2(x)) + len_emb
         x = self.fc_out(x)
 
-        return self.outactive(x), mu, logvar
+        return self.outactive(x), mu, logstd
 
 
 

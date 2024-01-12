@@ -24,7 +24,8 @@ def count_parameters(model):
 
 def kl_loss(mu=None, logstd=None):
     logstd = logstd.clamp(max=10)
-    kl_div = -0.5 * torch.mean(torch.sum(1 + 2 * logstd - mu**2 - logstd.exp()**2, dim=1))
+    var = logstd.exp()**2
+    kl_div = -0.5 * torch.mean(torch.sum(1 + torch.log(var) - mu**2 - var, dim=1))
     kl_div = kl_div.clamp(max=1000)
     return kl_div
 
@@ -33,9 +34,12 @@ def kl_loss(mu=None, logstd=None):
 
 ## PARAMS
 num_batch = 64
-num_epoch = 500
+num_epoch = 50
 lr = 0.001
 log_interval = 5
+max_beta = .1
+min_beta = 0
+annealing_steps = num_epoch
 
 
 train_dataset = MoleculeDataset(root="./data/", filename="train_bace.csv")
@@ -65,19 +69,22 @@ all_loss_train = []
 loss_test = []
 train_acc = []
 test_acc = []
+allbeta = []
 for iter in tqdm(range(num_epoch), position=0, leave=True):
     model.train()
     running_loss = 0
     acc = 0
+    current_beta = min(max_beta, (max_beta - min_beta) * iter / annealing_steps)
+    allbeta.append(current_beta)
     for _, data in enumerate(train_loader):
         data.to(device)
         optimizer.zero_grad()
         data.x = data.x.float()
         # data.molfeature = data.molfeature.float()
         # len = nn.functional.one_hot(data.len, 200)
-        pred, mu, logvar = model(data.x, data.edge_index, data.batch, data.len)
+        pred, mu, logstd = model(data.x, data.edge_index, data.batch, data.len)
         # l2_regularization = sum(p.pow(2).sum() for p in model.parameters())
-        loss = kl_loss(mu, logvar) + \
+        loss = current_beta * kl_loss(mu, logstd) + \
                loss_fn(pred, data.smile_encoded.float().view(data.y.shape[0], -1).clamp(0))
                # 0.01 * l2_regularization
 
@@ -95,8 +102,8 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
         test_data = next(enumerate(test_loader))[1]
         test_data.x = test_data.x.float()
         test_data.molfeature = test_data.molfeature.float()
-        pred, mu, logvar = model(test_data.x, test_data.edge_index, test_data.batch, test_data.len)
-        test_loss = kl_loss(mu, logvar) + \
+        pred, mu, logstd = model(test_data.x, test_data.edge_index, test_data.batch, test_data.len)
+        test_loss = current_beta * kl_loss(mu, logstd) + \
                loss_fn(pred, test_data.smile_encoded.float().view(test_data.y.shape[0], -1).clamp(0))
 
         loss_test.append(test_loss.item())
@@ -106,10 +113,14 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
             iter, all_loss_train[iter], test_loss.item()))
 
 
-torch.save(model.state_dict(), './saved_model/model_smile.pth')
+torch.save(model.state_dict(), './saved_model/model_smile1.pth')
 torch.save(optimizer.state_dict(), './saved_model/optimizer1.pth')
 
 ##
+plt.figure()
+plt.plot(allbeta)
+
+
 plt.figure()
 plt.plot(all_loss_train, 'b', label='train')
 plt.plot(loss_test, 'r', label='test')
