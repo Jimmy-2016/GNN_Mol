@@ -19,7 +19,7 @@ torch.manual_seed(1)
 np.random.seed(1)
 
 
-PATH = './saved_model/model_smile1.pth'
+PATH = './saved_model/model_smile2.pth'
 
 
 model = mymolGen(real=False)

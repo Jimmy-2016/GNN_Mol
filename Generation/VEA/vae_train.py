@@ -25,7 +25,9 @@ def count_parameters(model):
 def kl_loss(mu=None, logstd=None):
     logstd = logstd.clamp(max=10)
     var = logstd.exp()**2
-    kl_div = -0.5 * torch.mean(torch.sum(1 + torch.log(var) - mu**2 - var, dim=1))
+    # kl_div = -0.5 * torch.mean(torch.sum(1 + torch.log(var) - mu**2 - var, dim=1))
+    kl_div = torch.mean(torch.sum(var + mu**2 - torch.log(logstd.exp()) - 1, dim=1))
+
     kl_div = kl_div.clamp(max=1000)
     return kl_div
 
@@ -113,7 +115,7 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
             iter, all_loss_train[iter], test_loss.item()))
 
 
-torch.save(model.state_dict(), './saved_model/model_smile1.pth')
+torch.save(model.state_dict(), './saved_model/model_smile2.pth')
 torch.save(optimizer.state_dict(), './saved_model/optimizer1.pth')
 
 ##
