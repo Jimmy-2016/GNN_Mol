@@ -21,10 +21,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## PARAMS
 num_batch = 64
-num_epoch = 20
+num_epoch = 50
 lr = 0.001
 log_interval = 5
-max_beta = .0005
+max_beta = .001
 min_beta = 0
 annealing_steps = num_epoch
 
