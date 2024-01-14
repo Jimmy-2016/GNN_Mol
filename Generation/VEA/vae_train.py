@@ -72,7 +72,7 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
         pred, mu, logstd = model(data.x, data.edge_index, data.batch, data.len)
         # l2_regularization = sum(p.pow(2).sum() for p in model.parameters())
         loss = current_beta * kl_loss(mu, logstd) + \
-               loss_fn(pred, data.smile_encoded.float().view(data.y.shape[0], -1).clamp(0))
+               loss_fn(pred, data.smile_encoded.float().view(data.y.shape[0], -1))
                # 0.01 * l2_regularization
 
         loss.backward()
