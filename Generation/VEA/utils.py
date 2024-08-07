@@ -17,10 +17,7 @@ def count_parameters(model):
 def kl_loss(mu=None, logstd=None):
     logstd = logstd.clamp(max=10)
     var = logstd.exp()**2
-    # kl_div = -0.5 * torch.mean(torch.sum(1 + torch.log(var) - mu**2 - var, dim=1))
-    # kl_div = torch.mean(torch.sum(var + mu**2 - torch.log(logstd.exp()) - 1, dim=1))
-    # kl_div = 0.5 * torch.sum(var + mu**2 - torch.log(logstd.exp()) - 1)
-    kl_div = 0.5 * torch.sum(mu.pow(2) + var - torch.log(var) - 1)
+    kl_div = -0.5 * torch.sum(mu.pow(2) + var - torch.log(var) - 1)
     kl_div = kl_div.clamp(max=1000)
     return kl_div
 
