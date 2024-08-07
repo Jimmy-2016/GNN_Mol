@@ -16,7 +16,6 @@ class myGNN(nn.Module):
         self.pool2 = TopKPooling(in_channels=hidden_dim2, ratio=0.8)
 
         self.fc_molfeature = nn.Linear(14, molfeature_dim)
-        # self.fc1 = nn.Linear(2 * hidden_dim2 + molfeature_dim, fc_hiddim)
         self.fc1 = nn.Linear(2 * hidden_dim2, fc_hiddim)
 
         self.fc2 = nn.Linear(fc_hiddim, 1)
