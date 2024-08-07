@@ -7,7 +7,7 @@ from rdkit.Chem import Draw
 import networkx as nx
 import matplotlib.pyplot as plt
 
-PATH = './saved_model/model_nomolfeat.pth'
+PATH = 'saved_model/model_nomolfeat.pth'
 
 
 model = myGNN()

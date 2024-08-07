@@ -10,7 +10,7 @@ num_epochs = 10
 lr = 0.01
 
 ## load data
-file_path = '../data/raw/bace.csv'
+file_path = '../Classification/data/raw/bace.csv'
 bace_ds = pd.read_csv(file_path)
 
 ##

@@ -103,8 +103,8 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
             iter, running_loss, test_loss.item(), train_acc[iter], test_acc[iter]))
 
 
-torch.save(model.state_dict(), './saved_model/model_nomolfeat.pth')
-torch.save(optimizer.state_dict(), './saved_model/optimizer1.pth')
+torch.save(model.state_dict(), 'saved_model/model_nomolfeat.pth')
+torch.save(optimizer.state_dict(), 'saved_model/optimizer1.pth')
 mlflow.pytorch.log_model(model, "model_nofeat")
 
 mlflow.end_run()

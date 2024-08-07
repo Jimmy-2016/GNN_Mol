@@ -1,11 +1,4 @@
-
-
-from model import *
-import torch.utils.data
 import matplotlib.pyplot as plt
-import torch.optim as optim
-import numpy as np
-import torchvision
 import umap
 from dataset import *
 from utils import *

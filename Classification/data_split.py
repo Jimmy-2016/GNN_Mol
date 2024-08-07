@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('./data/raw/bace.csv').reset_index()
+df = pd.read_csv('data/raw/bace.csv').reset_index()
 
 pp = 0.66
 

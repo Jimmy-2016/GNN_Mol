@@ -56,7 +56,7 @@ def re_arange_edge(edges, nodes):
 
 
 
-PATH = './saved_model/model_nomolfeat.pth'
+PATH = 'saved_model/model_nomolfeat.pth'
 
 
 model = myGNN()
