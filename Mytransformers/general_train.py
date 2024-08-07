@@ -6,7 +6,7 @@ from transformers import RobertaTokenizerFast, BertConfig, BertForMaskedLM, get_
 
 ## Params
 num_batch = 32
-num_epochs = 10
+num_epochs = 2
 lr = 0.01
 
 ## load data
@@ -14,7 +14,7 @@ file_path = '../Classification/data/raw/bace.csv'
 bace_ds = pd.read_csv(file_path)
 
 ##
-
+# 1. Read the data
 tokenizer = RobertaTokenizerFast.from_pretrained("seyonec/PubChem10M_SMILES_BPE_450k")
 smiles_list = bace_ds["mol"].tolist()
 train_smiles, test_smiles = train_test_split(smiles_list, test_size=0.5, random_state=42)
