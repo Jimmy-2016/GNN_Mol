@@ -24,10 +24,6 @@ model.eval()
 test_data = next(enumerate(test_loader))[1]
 test_data.x = test_data.x.float()
 test_data.molfeature = test_data.molfeature.float()
-# pred, out_pool1, edge_index1, perm1, score1, out_pool2, edge_index2, perm2, score2 = \
-#     model(test_data.x, test_data.edge_index, test_data.batch)
-
-# print(pred)
 
 explainer = Explainer(
     model=model,

@@ -25,7 +25,7 @@ def correct_smiles(smiles):
     return None
 
 
-PATH = './saved_model/model_smile.pth'
+PATH = './saved_model/model_smile2.pth'
 
 
 model = mymolGen(real=False)

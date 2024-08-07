@@ -36,14 +36,6 @@ model.eval()
 test_data = next(enumerate(test_loader))[1]
 test_data.x = test_data.x.float()
 target = test_data.y
-# reparm
-# mol_len = 20
-# z = torch.randn((1, 50))
-# z = torch.cat([z, model.relu(model.fc_emd_len(torch.tensor(mol_len)).unsqueeze(0))], dim=1)
-# # decoder
-# x = model.relu(model.fc_decoder1(z))
-# x = model.relu(model.fc_decoder2(x))
-# x = model.fc_out(x)
 
 pred, mu, sigma = model(test_data.x, test_data.edge_index, test_data.batch, test_data.len)
 ##
@@ -55,9 +47,6 @@ umap_hparams = {'n_neighbors': 5,
 
 
 fig, ax = plt.subplots(constrained_layout=False)
-# ax.set(xticks=[], yticks=[])
-# ax.set_xlim([-10, 20])
-# ax.set_ylim([-10, 20])
 
 umap_embedding = umap.UMAP(n_neighbors=umap_hparams['n_neighbors'], min_dist=umap_hparams['min_dist'],
                            n_components=umap_hparams['n_components'],

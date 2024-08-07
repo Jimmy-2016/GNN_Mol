@@ -21,7 +21,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## PARAMS
 num_batch = 64
-num_epoch = 50
+num_epoch = 10
 lr = 0.001
 log_interval = 5
 max_beta = .001
@@ -67,10 +67,7 @@ for iter in tqdm(range(num_epoch), position=0, leave=True):
         data.to(device)
         optimizer.zero_grad()
         data.x = data.x.float()
-        # data.molfeature = data.molfeature.float()
-        # len = nn.functional.one_hot(data.len, 200)
         pred, mu, logstd = model(data.x, data.edge_index, data.batch, data.len)
-        # l2_regularization = sum(p.pow(2).sum() for p in model.parameters())
         loss = current_beta * kl_loss(mu, logstd) + \
                loss_fn(pred, data.smile_encoded.float().view(data.y.shape[0], -1))
                # 0.01 * l2_regularization
