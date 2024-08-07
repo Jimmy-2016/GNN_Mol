@@ -21,22 +21,11 @@ def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 def calculate_metrics(y_pred, y_true, epoch, type):
-    # print(f"\n Confusion matrix: \n {confusion_matrix(y_pred, y_true)}")
-    # print(f"F1 Score: {f1_score(y_true, y_pred)}")
-    # print(f"Accuracy: {accuracy_score(y_true, y_pred)}")
+
     prec = precision_score(y_true, y_pred)
     rec = recall_score(y_true, y_pred)
-    # print(f"Precision: {prec}")
-    # print(f"Recall: {rec}")
     mlflow.log_metric(key=f"Precision-{type}", value=float(prec), step=epoch)
     mlflow.log_metric(key=f"Recall-{type}", value=float(rec), step=epoch)
-    # try:
-    #     roc = roc_auc_score(y_true, y_pred)
-    #     print(f"ROC AUC: {roc}")
-    #     mlflow.log_metric(key=f"ROC-AUC-{type}", value=float(roc), step=epoch)
-    # except:
-    #     mlflow.log_metric(key=f"ROC-AUC-{type}", value=float(0), step=epoch)
-    #     print(f"ROC AUC: notdefined")
 
 
 ## PARAMS
@@ -62,9 +51,6 @@ print('NumParams = :{}'.format(count_parameters(model)))
 # < 1 increases precision, > 1 recall
 loss_fn = torch.nn.BCELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-# scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.01)
-
-# Start training
 
 
 ## train loop

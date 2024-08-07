@@ -81,10 +81,8 @@ out_pool1, edge_index1, _, batch, perm1, score1 = model.pool1(x, test_data.edge_
 x = model.relu(model.conv2(out_pool1, edge_index1))
 out_pool2, edge_index2, _, batch, perm2, score2 = model.pool2(x, edge_index1, None, batch)
 
-# mol_emb = self.fc_molfeature(mol_feat)
 x = torch.cat([gmp(out_pool2, batch), gap(out_pool2, batch)], dim=1)
 x = model.relu(model.fc1(x))
-# x = model.dropout(x)
 pred = torch.nn.functional.sigmoid(model.fc2(x))
 
 
@@ -95,9 +93,6 @@ intermediate_graph = Data(x=out_pool1.squeeze(), edge_index=edge_index1, batch=1
 
 ## plotting
 
-# plt.figure()
-# plt.plot(test_data.x.sum(1))
-
 org_mol = test_data.node_stores[0]['smiles'][0]
 mol = Chem.MolFromSmiles(org_mol)
 img = Draw.MolToImage(mol)
@@ -105,22 +100,6 @@ img.show()
 
 
 molecular_graph = smiles_to_graph(org_mol)
-
-# Visualize the graph
-# if molecular_graph:
-#     pos = nx.spring_layout(molecular_graph)
-#     nx.draw(molecular_graph, pos, with_labels=True, font_weight='bold', node_size=700, node_color="skyblue", font_size=8, font_color="black", edge_color="gray", linewidths=0.5)
-#     plt.title("Molecular Graph")
-#     plt.show()
-
-
-
-letmwknow=1
-
-# rdkit_molecule = graph_to_rdkit(Data(x=test_data.x, edge_index=test_data.edge_index))
-# smiles = Chem.MolToSmiles(rdkit_molecule)
-# img = Draw.MolToImage(rdkit_molecule, size=(300, 300))
-# img.show()
 
 
 ##
